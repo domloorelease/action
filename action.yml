@@ -29,6 +29,7 @@ runs:
         fi
 
     - name: Jalankan Otak Bot Pinter
+      shell: bash
       run: |
         echo "=== 1. SEARCHING LATEST TAG & ANCHOR COMMIT ==="
         LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0-proto.0")
@@ -119,6 +120,7 @@ runs:
 
     - name: Update File Konfigurasi Projek (SED Engine)
       if: env.NEW_VERSION != ''
+      shell: bash
       run: |
         if [ -f "package.json" ]; then
           sed -i "s/\"version\": \".*\"/\"version\": \"${{ env.NEW_VERSION }}\"/g" package.json
@@ -129,6 +131,7 @@ runs:
 
     - name: Create Release Branch and Push
       if: env.NEW_VERSION != ''
+      shell: bash
       env:
         GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         GH_TOKEN: ${{ steps.generate_token.outputs.token }}
