@@ -10,13 +10,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-  steps:
-    - name: Generate Token Si Bot
-      id: generate_token
-      uses: actions/create-github-app-token@v1
-      with:
-        app-id: ${{ secrets.DOMLOO_APP_ID }}
-        private-key: ${{ secrets.DOMLOO_APP_PRIVATE_KEY }}
 
   steps:
     - name: Generate Token Si Bot
