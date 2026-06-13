@@ -20,6 +20,7 @@ runs:
 
     - name: Deteksi Trigger
       id: deteksi
+      shell: bash
       run: |
         if [ "${{ github.event_name }}" == "issue_comment" ]; then
           COMMENT_BODY="${{ github.event.comment.body }}"
