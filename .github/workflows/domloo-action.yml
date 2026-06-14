@@ -143,7 +143,7 @@ jobs:
           GH_TOKEN: ${{ inputs.token }}
         run: |
           git config --global user.name "domloo-release[bot]"
-          git config --global user.email "$(gh api /users/domloo-release%5Bbot%5D -q .id)+domloo-release[bot]@users.noreply.github.com"
+          git config --global user.email "4042690+domloo-release[bot]@users.noreply.github.com"
           
           if [ -f "docs/CHANGELOG.md" ]; then
             cat current_changelog.md docs/CHANGELOG.md > temp_changelog.md && mv temp_changelog.md docs/CHANGELOG.md
