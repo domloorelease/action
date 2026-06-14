@@ -26,12 +26,6 @@ jobs:
           # Pakai token dari inputs/bawaan
           token: ${{ inputs.token }}
   
-      - name: Checkout Source Code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ inputs.token }}
-  
       - name: Deteksi Trigger
         id: deteksi
         run: |
@@ -42,6 +36,8 @@ jobs:
           fi
   
       - name: Jalankan Otak Bot Pinter
+        env:
+          GH_TOKEN: ${{ inputs.token }}
         run: |
           echo "=== 1. SEARCHING LATEST TAG & ANCHOR COMMIT ==="
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0-proto.0")
