@@ -17,14 +17,12 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      # STEP GENERATE TOKEN DIHAPUS TOTAL
-
       - name: Checkout Source Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # Pakai token dari inputs/bawaan
-          token: ${{ inputs.token }}
+          # Kalau inputs.token kosong, auto fallback ke github.token bawaan runner
+          token: ${{ inputs.token || github.token }}
   
       - name: Deteksi Trigger
         id: deteksi
