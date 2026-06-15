@@ -17,9 +17,7 @@ async function build() {
       'child_process', 
       'crypto', 
       'http', 
-      'https',
-      '@actions/core',
-      '@actions/github'
+      'https'
     ],
     banner: {
       js: `
