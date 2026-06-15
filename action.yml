@@ -20,13 +20,15 @@ runs:
         fi
 
     - name: Jalankan Otak Bot Pinter
+      id: otak_bot # TAMBAHIN ID INI
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token || github.token }}
       run: |
-        # Fetch tags dengan aman tanpa peduli status repo
         git fetch --tags || true
         node ${{ github.action_path }}/dist/index.js
+        # Trik: Ambil value dari file output kalau ada, kalau nggak ada set kosong
+        echo "NEW_VERSION=${{ steps.otak_bot.outputs.new_version }}" >> $GITHUB_ENV
 
     - name: Update File Konfigurasi Projek (SED Engine)
       if: env.NEW_VERSION != ''
@@ -43,9 +45,9 @@ runs:
       if: env.NEW_VERSION != ''
       shell: bash
       env:
-        # Gak usah pake ${{ env.NEW_VERSION }} di sini
+        # Sekarang env.NEW_VERSION bakal keisi dari echo di step sebelumnya
+        NEW_VERSION: ${{ env.NEW_VERSION }}
         GITHUB_TOKEN: ${{ inputs.token || github.token }}
-        GH_TOKEN: ${{ inputs.token || github.token }}
       run: |
-        # Oper NEW_VERSION langsung dari environment runner ke node
-        NEW_VERSION=$NEW_VERSION node ${{ github.action_path }}/dist/push-engine.js
+        # Gunakan variable $NEW_VERSION yang udah ke-load di environment
+        node ${{ github.action_path }}/dist/push-engine.js
