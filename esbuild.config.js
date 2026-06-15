@@ -6,12 +6,21 @@ async function build() {
     bundle: true,
     platform: 'node',
     target: 'node22',
-    format: 'esm', // Ubah ke esm
+    format: 'esm',
     outdir: 'dist',
     minify: true,
     sourcemap: false,
-    external: [],
-    // Ngakalin __dirname dan __filename biar gak error di format ESM
+    external: [
+      'os', 
+      'fs', 
+      'path', 
+      'child_process', 
+      'crypto', 
+      'http', 
+      'https',
+      '@actions/core',
+      '@actions/github'
+    ],
     banner: {
       js: `
         import { fileURLToPath } from 'url';
