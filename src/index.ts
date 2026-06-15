@@ -49,12 +49,19 @@ async function run() {
 
     const changelogCommits = changelogCommitsArray.join('\n');
 
-    // Meniru persis 3 block pengecekan if di Bash (termasuk grep -q '[^[:space:]]')
-    // Block 1 & 2 di Bash lu kembar
+    // ... (setelah const changelogCommits = changelogCommitsArray.join('\n');)
+
+    // GANTI BLOCK IF INI BIAR GAK LANGSUNG EXIT KALO LOG KOSONG
     if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
-      console.log("No feature or bugfix commits found. Skipping release PR!");
-      process.exit(0);
+      console.log("No new feature/bugfix commits found. Skipping release PR!");
+      // JANGAN process.exit(0) di sini kalau mau lanjut ke step berikutnya
+      // Kita set variable kosong aja biar step selanjutnya (if env.NEW_VERSION != '') otomatis skip
+      core.exportVariable('NEW_VERSION', ''); 
+      return; 
     }
+    
+    // ... (lanjutkan sisa logic parsing di bawahnya)
+
 
     if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
       console.log("No feature or bugfix commits found. All new commits are minor maintenance (chore/docs/test/ci). Skipping release PR!");
