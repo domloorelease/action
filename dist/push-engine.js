@@ -13,9 +13,7 @@ function logStep(msg) {
     console.log(`\n\x1b[36m=== ${msg} ===\x1b[0m`);
 }
 async function run() {
-    console.log(`DEBUG: NEW_VERSION is: "${process.env.NEW_VERSION}"`); // TAMBAHKAN INI
     const nextVersion = process.env.NEW_VERSION;
-    // ...
     const githubToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
     const repository = process.env.GITHUB_REPOSITORY;
     if (!nextVersion) {
@@ -26,21 +24,11 @@ async function run() {
     shellExec('git config --global user.name "domloo-release[bot]"');
     shellExec('git config --global user.email "293296910+domloo-release[bot]@users.noreply.github.com"');
     logStep("PREPARING CHANGELOG");
-    const changelogPath = 'docs/CHANGELOG.md';
-    // 1. Baca isi dari log baru yang dibikin sama otak TS kemarin
-    const newLog = fs.readFileSync('current_changelog.md', 'utf8');
-    if (fs.existsSync(changelogPath)) {
-        const oldLog = fs.readFileSync(changelogPath, 'utf8');
-        // Tambahin separator garis horizontal (---) biar rapi
-        fs.writeFileSync(changelogPath, `${newLog}\n\n---\n\n${oldLog}`, 'utf8');
+    if (fs.existsSync('docs/CHANGELOG.md')) {
+        shellExec('cat current_changelog.md docs/CHANGELOG.md > temp_changelog.md && mv temp_changelog.md docs/CHANGELOG.md');
     }
     else {
-        // Kalau folder docs belum ada, bikin dulu biar gak error
-        if (!fs.existsSync('docs')) {
-            fs.mkdirSync('docs', { recursive: true });
-        }
-        // Tinggal copy murni pake fs bawaan
-        fs.writeFileSync(changelogPath, newLog, 'utf8');
+        shellExec('cp current_changelog.md docs/CHANGELOG.md');
     }
     const branchName = `release/${nextVersion}`;
     shellExec(`git checkout -B "${branchName}"`);

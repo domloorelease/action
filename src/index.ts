@@ -20,7 +20,6 @@ async function run() {
 
     console.log("=== 1. SEARCHING LATEST TAG & ANCHOR COMMIT ===");
     let latestTag = shellExec('git describe --tags --abbrev=0');
-    console.log(`DEBUG: Result of git describe: "${latestTag}"`); // TAMBAHKAN INI
     if (!latestTag) {
       latestTag = "v0.1.0-proto.0";
     }
@@ -48,21 +47,24 @@ async function run() {
       return !regex1.test(line) && !regex2.test(line);
     });
 
-    // ... di dalam run()
     const changelogCommits = changelogCommitsArray.join('\n');
 
-    // GANTI SEMUA INI:
+    // Meniru persis 3 block pengecekan if di Bash (termasuk grep -q '[^[:space:]]')
+    // Block 1 & 2 di Bash lu kembar
     if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
-      console.log("No new feature/bugfix commits found. Skipping release PR!");
-      // JANGAN process.exit(0), cukup set kosong dan return
-      core.exportVariable('NEW_VERSION', ''); 
-      return; 
+      console.log("No feature or bugfix commits found. Skipping release PR!");
+      process.exit(0);
     }
-    
-    // HAPUS BLOCK IF YANG KEMBAR DI BAWAHNYA
-    // HAPUS BLOCK IF (if (!changelogCommits) { ... process.exit(0) }) DI BAWAHNYA
-    
-    // Lanjut ke logic parsing versi di bawah...
+
+    if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
+      console.log("No feature or bugfix commits found. All new commits are minor maintenance (chore/docs/test/ci). Skipping release PR!");
+      process.exit(0);
+    }
+
+    if (!changelogCommits) {
+      console.log(`No new commits found after tag ${latestTag}. Skipping release PR!`);
+      process.exit(0);
+    }
 
     console.log("=== 3. PARSING COMMAND FROM PR ===");
     // BASE_VERSION=$(echo "$LATEST_TAG" | sed -E 's/([^#-]+).*/\1/')
@@ -130,13 +132,8 @@ async function run() {
       nextVersion = setParts[1] || "";
     }
 
-    // 1. Set output (ini cara paling standar di action)
-    core.setOutput('new_version', nextVersion);
-    
-    // 2. Tulis ke GITHUB_ENV (tetep pasang buat jaga-jaga)
-    if (process.env.GITHUB_ENV) {
-      fs.appendFileSync(process.env.GITHUB_ENV, `NEW_VERSION=${nextVersion}\n`);
-    }
+    // Export variable biar dibaca step composite berikutnya
+    core.exportVariable('NEW_VERSION', nextVersion);
 
     // Write file current_changelog.md persis gaya echo > dan echo >>
     const changelogContent = `## Changelog for ${nextVersion}\n\n${changelogCommits}\n`;
