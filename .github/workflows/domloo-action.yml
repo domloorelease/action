@@ -35,7 +35,7 @@ jobs:
   
       - name: Jalankan Otak Bot Pinter
         env:
-          GH_TOKEN: ${{ inputs.token }}
+          GH_TOKEN: ${{ inputs.token || github.token }}
         run: |
           echo "=== 1. SEARCHING LATEST TAG & ANCHOR COMMIT ==="
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.1.0-proto.0")
@@ -137,8 +137,8 @@ jobs:
       - name: Create Release Branch and Push
         if: env.NEW_VERSION != ''
         env:
-          GITHUB_TOKEN: ${{ inputs.token }}
-          GH_TOKEN: ${{ inputs.token }}
+          GITHUB_TOKEN: ${{ inputs.token || github.token }}
+          GH_TOKEN: ${{ inputs.token || github.token }}
         run: |
           git config --global user.name "domloo-release[bot]"
           git config --global user.email "4042690+domloo-release[bot]@users.noreply.github.com"
