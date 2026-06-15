@@ -15,7 +15,10 @@ function logStep(msg: string) {
 }
 
 async function run() {
+  console.log(`DEBUG: NEW_VERSION is: "${process.env.NEW_VERSION}"`); // TAMBAHKAN INI
   const nextVersion = process.env.NEW_VERSION;
+  // ...
+
   const githubToken = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
   const repository = process.env.GITHUB_REPOSITORY;
 
