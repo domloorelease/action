@@ -5,7 +5,8 @@ async function build() {
     entryPoints: ['src/index.ts', 'src/push-engine.ts'],
     bundle: true,        // INI PENTING: Masukin semua node_modules ke bundle
     platform: 'node',    // Targetnya harus node
-    target: 'node20',    // Samain sama versi runner GitHub Action
+    target: 'node22',    // Samain sama versi runner GitHub Action
+    format: 'esm',
     outdir: 'dist',
     minify: true,
     sourcemap: false,
