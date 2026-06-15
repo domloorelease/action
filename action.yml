@@ -40,6 +40,8 @@ runs:
       if: env.NEW_VERSION != ''
       shell: bash
       env:
+        # TAMBAHKAN BARIS INI: Mengoper variabel dari Runner Env ke Node Process
+        NEW_VERSION: ${{ env.NEW_VERSION }}
         GITHUB_TOKEN: ${{ inputs.token || github.token }}
         GH_TOKEN: ${{ inputs.token || github.token }}
       run: node ${{ github.action_path }}/dist/push-engine.js
