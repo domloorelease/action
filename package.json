@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "npx tsc && ncc build dist/index.js -o dist --minify"
+    "build": "npx tsc && ncc build dist/index.js -o dist --minify && ncc build dist/push-engine.js -o dist --minify"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
