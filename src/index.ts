@@ -1,9 +1,18 @@
+/**
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 
-// Helper biar eksekusi CLI dapet string bersih dan handal kayak Bash
 function shellExec(command: string): string {
   try {
     return execSync(command, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
@@ -14,7 +23,7 @@ function shellExec(command: string): string {
 
 async function run() {
   try {
-    // Ambil env variable yang diset di step deteksi trigger sebelumnya
+    
     const isComment = process.env.IS_COMMENT || '';
     const commentFound = process.env.COMMENT_FOUND || '';
 
@@ -35,22 +44,19 @@ async function run() {
     } else {
       rawLog = shellExec(`git log --format="* %s" ${tagCommitSha}..HEAD`);
     }
-
-    // Meniru persis logic sed -E '/.../d' menggunakan filter regex di TS
+    
     const rawLogLines = rawLog.split('\n').filter(line => line.length > 0);
     const changelogCommitsArray = rawLogLines.filter(line => {
-      // Sesuai sed regex 1: /^\* (Merge pull request|Merge branch|chore|docs|test|ci)(\([^)]+\))?:/d
+      
       const regex1 = /^\* (Merge pull request|Merge branch|chore|docs|test|ci)(\([^)]+?\))?:/;
-      // Sesuai sed regex 2: /^\* Merge pull request #[0-9]+ from .*/d
+      
       const regex2 = /^\* Merge pull request #[0-9]+ from .*/;
       
       return !regex1.test(line) && !regex2.test(line);
     });
 
     const changelogCommits = changelogCommitsArray.join('\n');
-
-    // Meniru persis 3 block pengecekan if di Bash (termasuk grep -q '[^[:space:]]')
-    // Block 1 & 2 di Bash lu kembar
+    
     if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
       console.log("No feature or bugfix commits found. Skipping release PR!");
       process.exit(0);
@@ -67,17 +73,15 @@ async function run() {
     }
 
     console.log("=== 3. PARSING COMMAND FROM PR ===");
-    // BASE_VERSION=$(echo "$LATEST_TAG" | sed -E 's/([^#-]+).*/\1/')
+    
     const baseVersionMatch = latestTag.match(/^([^#-]+)/);
     const baseVersion = baseVersionMatch ? baseVersionMatch[1] : latestTag;
-
-    // TAG_COUNTER=$(echo "$LATEST_TAG" | sed -E 's/.*\.([0-9]+)$/\1/' | grep -E '^[0-9]+$' || echo "0")
+    
     const tagCounterMatch = latestTag.match(/\.([0-9]+)$/);
     const tagCounter = tagCounterMatch && /^[0-9]+$/.test(tagCounterMatch[1]) ? parseInt(tagCounterMatch[1], 10) : 0;
 
     const currentCommit = shellExec('git rev-parse HEAD');
     
-    // Gunakan GH_TOKEN bawaan env untuk otentikasi gh CLI
     const prNumber = shellExec(`gh pr list --state merged --search "${currentCommit}" --json number -q '.[0].number'`);
 
     let command = "";
@@ -91,10 +95,9 @@ async function run() {
       const match = prBody.match(commandRegex);
       if (match) command = match[0];
     }
-
-    // TYPE=${COMMAND:-@domloo-release alpha}
+    
     let fullType = command || "@domloo-release alpha";
-    // TYPE=${TYPE#@domloo-release }
+    
     let type = fullType.replace("@domloo-release ", "");
 
     const versionParts = baseVersion.replace(/^v/, "").split('.');
@@ -104,8 +107,7 @@ async function run() {
 
     let nextVersion = "";
     let versionBase = "";
-
-    // Exact replica dari switch-case di Bash
+    
     if (type === "major") {
       nextVersion = `${major + 1}.0.0`;
     } else if (type === "minor") {
@@ -127,15 +129,13 @@ async function run() {
     } else if (type === "stable") {
       nextVersion = latestTag.replace(/-.*/, '');
     } else if (type.startsWith("set")) {
-      // awk '{print $2}' dari string "set 1.2.3" -> "1.2.3"
+      
       const setParts = type.split(/\s+/);
       nextVersion = setParts[1] || "";
     }
-
-    // Export variable biar dibaca step composite berikutnya
+    
     core.exportVariable('NEW_VERSION', nextVersion);
-
-    // Write file current_changelog.md persis gaya echo > dan echo >>
+    
     const changelogContent = `## Changelog for ${nextVersion}\n\n${changelogCommits}\n`;
     fs.writeFileSync('current_changelog.md', changelogContent, 'utf8');
 

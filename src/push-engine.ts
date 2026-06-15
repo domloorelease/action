@@ -1,3 +1,13 @@
+/**
+ * Copyright 2026 SoTeen Studio
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ */
+
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 
@@ -9,7 +19,6 @@ function shellExec(command: string): string {
   }
 }
 
-// Biar output log di GitHub Action tetep rapi keliatan warna-warni tiap stepnya
 function logStep(msg: string) {
   console.log(`\n\x1b[36m=== ${msg} ===\x1b[0m`);
 }
