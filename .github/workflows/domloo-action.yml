@@ -161,7 +161,7 @@ jobs:
           git commit -m "chore: prepare release ${{ env.NEW_VERSION }}" || echo "No changes to commit"
           
           # Dorong paksa ke remote, auto tembus mau kondisinya kayak gimana pun
-          git push -f origin "$BRANCH_NAME"
+          git push -f "https://x-access-token:${{ inputs.token || github.token }}@github.com/${{ github.repository }}.git" "$BRANCH_NAME"
   
           # ... sisa perintah gh pr list, cleanup, dan pr create ke bawah ...
   
@@ -175,7 +175,7 @@ jobs:
               echo "Closing old PR #$PR_NUM and deleting branch $OLD_BRANCH..."
               
               gh pr close "$PR_NUM" --delete-branch
-              git push origin --delete "$OLD_BRANCH" 2>/dev/null || true
+              git push "https://x-access-token:${{ inputs.token || github.token }}@github.com/${{ github.repository }}.git" --delete "$OLD_BRANCH" 2>/dev/null || true
             done
           else
             echo "No old release PRs to cleanup."
