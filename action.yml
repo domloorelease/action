@@ -23,7 +23,9 @@ runs:
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token || github.token }}
-      run: node ${{ github.action_path }}/dist/index.js
+      run: |
+        git fetch --tags --unshallow || git fetch --tags
+        node ${{ github.action_path }}/dist/index.js
 
     - name: Update File Konfigurasi Projek (SED Engine)
       if: env.NEW_VERSION != ''

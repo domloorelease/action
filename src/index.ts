@@ -140,8 +140,13 @@ async function run() {
       nextVersion = setParts[1] || "";
     }
 
-    // Export variable biar dibaca step composite berikutnya
+    // Export buat internal lib action
     core.exportVariable('NEW_VERSION', nextVersion);
+
+    // Export langsung ke GITHUB_ENV biar Bash shell runner pasti dapet
+    if (process.env.GITHUB_ENV) {
+      fs.appendFileSync(process.env.GITHUB_ENV, `NEW_VERSION=${nextVersion}\n`);
+    }
 
     // Write file current_changelog.md persis gaya echo > dan echo >>
     const changelogContent = `## Changelog for ${nextVersion}\n\n${changelogCommits}\n`;
