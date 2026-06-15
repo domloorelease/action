@@ -48,31 +48,21 @@ async function run() {
       return !regex1.test(line) && !regex2.test(line);
     });
 
+    // ... di dalam run()
     const changelogCommits = changelogCommitsArray.join('\n');
 
-    // ... (setelah const changelogCommits = changelogCommitsArray.join('\n');)
-
-    // GANTI BLOCK IF INI BIAR GAK LANGSUNG EXIT KALO LOG KOSONG
+    // GANTI SEMUA INI:
     if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
       console.log("No new feature/bugfix commits found. Skipping release PR!");
-      // JANGAN process.exit(0) di sini kalau mau lanjut ke step berikutnya
-      // Kita set variable kosong aja biar step selanjutnya (if env.NEW_VERSION != '') otomatis skip
+      // JANGAN process.exit(0), cukup set kosong dan return
       core.exportVariable('NEW_VERSION', ''); 
       return; 
     }
     
-    // ... (lanjutkan sisa logic parsing di bawahnya)
-
-
-    if (!changelogCommits || !/[^\s]/.test(changelogCommits)) {
-      console.log("No feature or bugfix commits found. All new commits are minor maintenance (chore/docs/test/ci). Skipping release PR!");
-      process.exit(0);
-    }
-
-    if (!changelogCommits) {
-      console.log(`No new commits found after tag ${latestTag}. Skipping release PR!`);
-      process.exit(0);
-    }
+    // HAPUS BLOCK IF YANG KEMBAR DI BAWAHNYA
+    // HAPUS BLOCK IF (if (!changelogCommits) { ... process.exit(0) }) DI BAWAHNYA
+    
+    // Lanjut ke logic parsing versi di bawah...
 
     console.log("=== 3. PARSING COMMAND FROM PR ===");
     // BASE_VERSION=$(echo "$LATEST_TAG" | sed -E 's/([^#-]+).*/\1/')
