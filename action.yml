@@ -24,7 +24,8 @@ runs:
       env:
         GH_TOKEN: ${{ inputs.token || github.token }}
       run: |
-        git fetch --tags --unshallow || git fetch --tags
+        # Fetch tags dengan aman tanpa peduli status repo
+        git fetch --tags || true
         node ${{ github.action_path }}/dist/index.js
 
     - name: Update File Konfigurasi Projek (SED Engine)
