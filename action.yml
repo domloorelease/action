@@ -19,17 +19,11 @@ runs:
           echo "IS_COMMENT=true" >> $GITHUB_ENV
         fi
 
-    - name: Hitung Hash Folder Src Domloo secara Native
+    - name: Calculate Folder Hash
       shell: bash
       run: |
-        # Cari semua file .ts di folder src action, ambil isinya, lalu buat md5 hash tunggal
-        SRC_HASH=$(find "${{ github.action_path }}/src" -type f -name "*.ts" -exec md5sum {} + | sort | md5sum | awk '{print $1}')
-        
-        # Cari hash package.json juga biar aman kalau ada library baru
-        PKG_HASH=$(md5sum "${{ github.action_path }}/package.json" | awk '{print $1}')
-        
-        # Gabungin dan oper ke ENV GitHub Actions
-        echo "DOMLOO_SRC_HASH=${SRC_HASH}-${PKG_HASH}" >> $GITHUB_ENV
+        chmod +x ${{ github.action_path }}/action-scripts/calculate-hash.sh
+        bash ${{ github.action_path }}/action-scripts/calculate-hash.sh
 
     - name: Cache Domloo Dependencies & Dist
       id: domloo-cache
