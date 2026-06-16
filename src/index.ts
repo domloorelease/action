@@ -108,6 +108,10 @@ async function run() {
     let nextVersion = "";
     let versionBase = "";
     
+    const cleanBase = (tag: string, pattern: RegExp) => {
+      return tag.replace(pattern, '').replace(/^v/, '');
+    };
+    
     if (type === "major") {
       nextVersion = `${major + 1}.0.0`;
     } else if (type === "minor") {
@@ -115,16 +119,16 @@ async function run() {
     } else if (type === "patch") {
       nextVersion = `${major}.${minor}.${patch + 1}`;
     } else if (type === "proto") {
-      versionBase = latestTag.replace(/-proto\.[0-9]+/, '');
+      versionBase = cleanBase(latestTag, /-proto\.[0-9]+/);
       nextVersion = `${versionBase}-proto.${tagCounter + 1}`;
     } else if (type === "alpha") {
-      versionBase = latestTag.replace(/-alpha\.[0-9]+/, '');
+      versionBase = cleanBase(latestTag, /-alpha\.[0-9]+/);
       nextVersion = `${versionBase}-alpha.${tagCounter + 1}`;
     } else if (type === "beta") {
-      versionBase = latestTag.replace(/-beta\.[0-9]+/, '');
+      versionBase = cleanBase(latestTag, /-beta\.[0-9]+/);
       nextVersion = `${versionBase}-beta.${tagCounter + 1}`;
     } else if (type === "rc") {
-      versionBase = latestTag.replace(/-rc\.[0-9]+/, '');
+      versionBase = cleanBase(latestTag, /-rc\.[0-9]+/);
       nextVersion = `${versionBase}-rc.${tagCounter + 1}`;
     } else if (type === "stable") {
       nextVersion = latestTag.replace(/-.*/, '');
