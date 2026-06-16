@@ -29,12 +29,8 @@ runs:
       if: env.NEW_VERSION != ''
       shell: bash
       run: |
-        if [ -f "package.json" ]; then
-          sed -i "s/\"version\": \".*\"/\"version\": \"${{ env.NEW_VERSION }}\"/g" package.json
-        fi
-        if [ -f "Cargo.toml" ]; then
-          sed -i "s/^version = \".*\"/version = \"${{ env.NEW_VERSION }}\"/g" Cargo.toml
-        fi
+        chmod +x ${{ github.action_path }}/action-scripts/sed-engine.sh
+        bash ${{ github.action_path }}/action-scripts/sed-engine.sh
 
     - name: Create Release Branch and Push
       if: env.NEW_VERSION != ''
