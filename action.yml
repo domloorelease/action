@@ -19,6 +19,18 @@ runs:
           echo "IS_COMMENT=true" >> $GITHUB_ENV
         fi
 
+    - name: Hitung Hash Folder Src Domloo secara Native
+      shell: bash
+      run: |
+        # Cari semua file .ts di folder src action, ambil isinya, lalu buat md5 hash tunggal
+        SRC_HASH=$(find "${{ github.action_path }}/src" -type f -name "*.ts" -exec md5sum {} + | sort | md5sum | awk '{print $1}')
+        
+        # Cari hash package.json juga biar aman kalau ada library baru
+        PKG_HASH=$(md5sum "${{ github.action_path }}/package.json" | awk '{print $1}')
+        
+        # Gabungin dan oper ke ENV GitHub Actions
+        echo "DOMLOO_SRC_HASH=${SRC_HASH}-${PKG_HASH}" >> $GITHUB_ENV
+
     - name: Cache Domloo Dependencies & Dist
       id: domloo-cache
       uses: actions/cache@v4
@@ -26,8 +38,8 @@ runs:
         path: |
           ${{ github.action_path }}/node_modules
           ${{ github.action_path }}/dist
-        # Kita pakai kombinasi hash package-lock repo target (opsional) + SHA commit terakhir dari action lu
-        key: domloo-build-${{ github.action_ref }}-${{ github.sha }}
+        # Sekarang kuncinya beneran akurat ngikutin isi file TS lu!
+        key: domloo-build-${{ env.DOMLOO_SRC_HASH }}
 
     - name: Install & Compile On-the-Fly
       if: steps.domloo-cache.outputs.cache-hit != 'true'
