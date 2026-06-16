@@ -26,14 +26,12 @@ runs:
       run: node ${{ github.action_path }}/dist/index.js
 
     - name: Update File Konfigurasi Projek (SED Engine)
-      if: env.NEW_VERSION != ''
       shell: bash
       run: |
         chmod +x ${{ github.action_path }}/action-scripts/sed-engine.sh
         bash ${{ github.action_path }}/action-scripts/sed-engine.sh
 
     - name: Create Release Branch and Push
-      if: env.NEW_VERSION != ''
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.token || github.token }}
