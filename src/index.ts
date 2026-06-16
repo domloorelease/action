@@ -74,10 +74,12 @@ async function run() {
 
     console.log("=== 3. PARSING COMMAND FROM PR ===");
     
-    const baseVersionMatch = latestTag.match(/^([^#-]+)/);
+    const cleanLatestTag = cleanLatestTag.replace(/^v/, "");
+    
+    const baseVersionMatch = cleanLatestTag.match(/^([^#-]+)/);
     const baseVersion = baseVersionMatch ? baseVersionMatch[1] : latestTag;
     
-    const tagCounterMatch = latestTag.match(/\.([0-9]+)$/);
+    const tagCounterMatch = cleanLatestTag.match(/\.([0-9]+)$/);
     const tagCounter = tagCounterMatch && /^[0-9]+$/.test(tagCounterMatch[1]) ? parseInt(tagCounterMatch[1], 10) : 0;
 
     const currentCommit = shellExec('git rev-parse HEAD');
@@ -119,19 +121,19 @@ async function run() {
     } else if (type === "patch") {
       nextVersion = `${major}.${minor}.${patch + 1}`;
     } else if (type === "proto") {
-      versionBase = cleanBase(latestTag, /-proto\.[0-9]+/);
+      versionBase = cleanBase(cleanLatestTag, /-proto\.[0-9]+/);
       nextVersion = `${versionBase}-proto.${tagCounter + 1}`;
     } else if (type === "alpha") {
-      versionBase = cleanBase(latestTag, /-alpha\.[0-9]+/);
+      versionBase = cleanBase(cleanLatestTag, /-alpha\.[0-9]+/);
       nextVersion = `${versionBase}-alpha.${tagCounter + 1}`;
     } else if (type === "beta") {
-      versionBase = cleanBase(latestTag, /-beta\.[0-9]+/);
+      versionBase = cleanBase(cleanLatestTag, /-beta\.[0-9]+/);
       nextVersion = `${versionBase}-beta.${tagCounter + 1}`;
     } else if (type === "rc") {
-      versionBase = cleanBase(latestTag, /-rc\.[0-9]+/);
+      versionBase = cleanBase(cleanLatestTag, /-rc\.[0-9]+/);
       nextVersion = `${versionBase}-rc.${tagCounter + 1}`;
     } else if (type === "stable") {
-      nextVersion = latestTag.replace(/-.*/, '');
+      nextVersion = cleanLatestTag.replace(/-.*/, '');
     } else if (type.startsWith("set")) {
       
       const setParts = type.split(/\s+/);
