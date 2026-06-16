@@ -27,7 +27,8 @@ async function run() {
   const repository = process.env.GITHUB_REPOSITORY;
 
   if (!nextVersion) {
-    console.log("NEW_VERSION env is missing. Skipping push engine.");
+    logLine("NEW_VERSION env is missing. Skipping push engine.", "ERROR");
+    logEnd(16);
     return;
   }
 
@@ -62,22 +63,22 @@ async function run() {
     const oldPrs = oldPrsRaw.split('\n').filter(Boolean);
     for (const prNum of oldPrs) {
       const oldBranch = shellExec(`gh pr view "${prNum}" --json headRefName -q '.headRefName'`);
-      console.log(`Closing old PR #${prNum} and deleting branch ${oldBranch}...`);
+      logLine(`Closing old PR #${prNum} and deleting branch ${oldBranch}...`, "WARN");
       shellExec(`gh pr close "${prNum}" --delete-branch`);
       shellExec(`git push "https://x-access-token:${githubToken}@github.com/${repository}.git" --delete "${oldBranch}"`);
     }
   } else {
-    console.log("No old release PRs to cleanup.");
+    logLine("No old release PRs to cleanup.");
   }
 
   logLine("MANAGING RELEASE PR");
   const prExists = shellExec(`gh pr list --head "${branchName}" --json number -q '.[0].number'`);
 
   if (!prExists) {
-    console.log(`Opening a brand new Release PR for ${branchName}...`);
+    logLine(`Opening a brand new Release PR for ${branchName}...`, "SUCCESS");
     shellExec(`gh pr create --title "chore: release ${nextVersion}" --body-file current_changelog.md --base main --head "${branchName}"`);
   } else {
-    console.log(`Updating existing PR #${prExists} body...`);
+    logLine(`Updating existing PR #${prExists} body...`, "WARN");
     shellExec(`gh pr edit "${prExists}" --body-file current_changelog.md`);
   }
   logEnd(16);
