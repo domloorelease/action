@@ -5,7 +5,7 @@
 # ============================================
 set -euo pipefail
 
-CHANGELOG_FILE="current_changelog.md"
+CHANGELOG_FILE="docs/CHANGELOG.md"
 
 if [ ! -s "$CHANGELOG_FILE" ]; then
     echo "::error::[GUARD] File $CHANGELOG_FILE kosong atau tidak ditemukan!"

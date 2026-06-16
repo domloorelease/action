@@ -8,8 +8,14 @@ inputs:
     default: ${{ github.token }}
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
+    - name: Run Security Guard Scanner
+      shell: bash
+      run: |
+        chmod +x "${{ github.action_path }}/action-scripts/security-guard.sh"
+        "${{ github.action_path }}/action-scripts/security-guard.sh"
+
     - name: Deteksi Trigger
       shell: bash
       env:
