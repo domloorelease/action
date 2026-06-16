@@ -74,7 +74,7 @@ async function run() {
 
     console.log("=== 3. PARSING COMMAND FROM PR ===");
     
-    const cleanLatestTag = cleanLatestTag.replace(/^v/, "");
+    const cleanLatestTag = latestTag.replace(/^v/, "");
     
     const baseVersionMatch = cleanLatestTag.match(/^([^#-]+)/);
     const baseVersion = baseVersionMatch ? baseVersionMatch[1] : latestTag;
