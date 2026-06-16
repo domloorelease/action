@@ -1,21 +1,28 @@
-export function logStep(msg: string, type: 'INFO' | 'SUCCESS' | 'ERROR' | 'WARN' = 'INFO') {
-  // Warna ANSI Node.js
-  const colors = {
-    INFO: '\x1b[36m',
-    SUCCESS: '\x1b[32m',
-    WARN: '\x1b[33m',
-    ERROR: '\x1b[31m',
-    GRAY: '\x1b[90m',
-    BOLD: '\x1b[1m',
-    RESET: '\x1b[0m'
-  };
+// Objek warna dipisah biar gak dideklarasi ulang terus
+const colors = {
+  INFO: '\x1b[36m',
+  SUCCESS: '\x1b[32m',
+  WARN: '\x1b[33m',
+  ERROR: '\x1b[31m',
+  GRAY: '\x1b[90m',
+  BOLD: '\x1b[1m',
+  RESET: '\x1b[0m'
+};
 
-  // Format jam HH:MM:SS biar presisi sama kayak Bash
+// 1. FUNGSI UNTUK MEMBUKA KOTAK (Hanya garis atas '═')
+export function logStart(boxWidth: number = 50) {
+  console.log(`\n${colors.GRAY}${'═'.repeat(boxWidth)}${colors.RESET}`);
+}
+
+// 2. FUNGSI UNTUK ISI BARIS LOG (Tengah-tengah kotak, tanpa border atas/bawah)
+export function logLine(msg: string, type: 'INFO' | 'SUCCESS' | 'ERROR' | 'WARN' = 'INFO') {
   const timestamp = new Date().toTimeString().split(' ')[0];
   const badge = `${colors[type]}[${type}]${colors.RESET}`;
-  const totalLen = msg.length + 16;
-
-  console.log(`\n${colors.GRAY}${'═'.repeat(totalLen)}${colors.RESET}`);
+  
   console.log(`${colors.GRAY}[${timestamp}]${colors.RESET} ${badge} ${colors.BOLD}${msg}${colors.RESET}`);
-  console.log(`${colors.GRAY}${'─'.repeat(totalLen)}${colors.RESET}`);
+}
+
+// 3. FUNGSI UNTUK MENUTUP KOTAK (Hanya garis bawah '─')
+export function logEnd(boxWidth: number = 50) {
+  console.log(`${colors.GRAY}${'─'.repeat(boxWidth)}${colors.RESET}\n`);
 }
