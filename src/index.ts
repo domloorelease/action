@@ -98,9 +98,15 @@ async function run() {
       if (match) command = match[0];
     }
     
+    // Ambil string perintah utuh
     let fullType = command || "@domloo-release alpha";
     
-    let type = fullType.replace("@domloo-release ", "");
+    // Ambil isi di dalam kurung Regex (Capture Group ke-1)
+    const matchGroup = fullType.match(/@domloo-release (major|minor|patch|proto|alpha|beta|rc|stable|set \S+)/);
+    // Trim string-nya biar gak ada spasi ghaib yang bikin if-statement gagal
+    let type = matchGroup ? matchGroup[1].trim() : "alpha";
+
+    console.log(`[Domloo Debug] Parsed Command Type: "${type}"`);
 
     const versionParts = baseVersion.replace(/^v/, "").split('.');
     const major = parseInt(versionParts[0], 10) || 0;
