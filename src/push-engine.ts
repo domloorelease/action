@@ -10,6 +10,7 @@
 
 import { execSync } from 'child_process';
 import * as fs from 'fs';
+import { logStep } from "./utils/logStep.js";
 
 function shellExec(command: string): string {
   try {
@@ -17,10 +18,6 @@ function shellExec(command: string): string {
   } catch {
     return '';
   }
-}
-
-function logStep(msg: string) {
-  console.log(`\n\x1b[36m=== ${msg} ===\x1b[0m`);
 }
 
 async function run() {

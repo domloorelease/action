@@ -26,18 +26,14 @@ runs:
         path: |
           ${{ github.action_path }}/node_modules
           ${{ github.action_path }}/dist
-        # Kunci di-hash berdasarkan package-lock DAN semua file .ts di folder src
         key: domloo-build-${{ hashFiles(format('{0}/package-lock.json', github.action_path), format('{0}/src/**/*.ts', github.action_path)) }}
 
-    # === COMPILE HANYA JIKA ADA PERUBAHAN DI KODE TS ATAU PACKAGES ===
-    - name: Install & Compile On The Fly
+    - name: Install & Compile On-the-Fly
       if: steps.domloo-cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        echo "=== [Domloo Engine] Perubahan terdeteksi atau cache kosong. Nge-build ulang... ==="
-        cd ${{ github.action_path }}
-        npm ci
-        npm run build
+        chmod +x ${{ github.action_path }}/action-scripts/install-compile.sh
+        bash ${{ github.action_path }}/action-scripts/install-compile.sh
 
     - name: Jalankan Otak Bot Pinter
       shell: bash
