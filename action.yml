@@ -26,7 +26,8 @@ runs:
         path: |
           ${{ github.action_path }}/node_modules
           ${{ github.action_path }}/dist
-        key: domloo-build-${{ hashFiles(format('{0}/package-lock.json', github.action_path), format('{0}/src/**/*.ts', github.action_path)) }}
+        # Kita pakai kombinasi hash package-lock repo target (opsional) + SHA commit terakhir dari action lu
+        key: domloo-build-${{ github.action_ref }}-${{ github.sha }}
 
     - name: Install & Compile On-the-Fly
       if: steps.domloo-cache.outputs.cache-hit != 'true'

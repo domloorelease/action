@@ -10,7 +10,7 @@
 
 import { execSync } from 'child_process';
 import * as fs from 'fs';
-import { logStep } from "./utils/logStep.js";
+import { logStep } from "./utils/logStep.ts";
 
 function shellExec(command: string): string {
   try {
