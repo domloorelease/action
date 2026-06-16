@@ -5,8 +5,9 @@
   "scripts": {
     "build": "node esbuild.config.js",
     "typecheck": "tsc",
-    "prettier": "npx prettier ./ts/**/*.ts --write",
-    "eslint": "npx eslint ./src/**/*.ts --fix"
+    "prettier": "npx prettier ./src/**/*.ts --write",
+    "eslint": "npx eslint ./src/**/*.ts --fix",
+    "inject:header": "node ./scripts/inject-header.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
