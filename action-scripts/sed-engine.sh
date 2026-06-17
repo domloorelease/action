@@ -11,5 +11,7 @@ if [ -n "$NEW_VERSION" ]; then
   fi
   if [ -f "Cargo.toml" ]; then
     sed -i "s/^version = \".*\"/version = \"$NEW_VERSION\"/g" Cargo.toml
+    
+    cargo check
   fi
 fi
