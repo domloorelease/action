@@ -1,6 +1,6 @@
 {
   "name": "domloo-release-action",
-  "version": "1.0.0",
+  "version": "0.1.0-proto.0-alpha.1",
   "type": "module",
   "scripts": {
     "build": "node esbuild.config.js",
