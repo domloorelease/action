@@ -169,35 +169,41 @@ async function run() {
     console.log('=== 2.5. TRAINING EMBEDDED NEURAL NETWORK ===');
     
     const trainingData = [
-      {
-        text: 'add feature for user auth authentication login',
-        category: 'FEATURES' as const,
-      },
-      {
-        text: 'implement lightvm bytecode executor interpreter',
-        category: 'FEATURES' as const,
-      },
-      {
-        text: 'fix null pointer exception error inside parser',
-        category: 'BUG_FIXES' as const,
-      },
-      {
-        text: 'resolve memory leak bug crash on exit',
-        category: 'BUG_FIXES' as const,
-      },
-      {
-        text: 'bump version dependencies update action configuration',
-        category: 'MAINTENANCE' as const,
-      },
-      {
-        text: 'clean up console log format code styling lint',
-        category: 'MAINTENANCE' as const,
-      },
+      // === FEATURES ===
+      { text: 'add feature for user auth authentication login', category: 'FEATURES' as const },
+      { text: 'implement lightvm bytecode executor interpreter core', category: 'FEATURES' as const },
+      { text: 'support new endpoint for custom rom system telemetry', category: 'FEATURES' as const },
+      { text: 'create native bindings for platform compilation support', category: 'FEATURES' as const },
+      { text: 'add dark mode toggle UI components elements', category: 'FEATURES' as const },
+      { text: 'implement automated test runner framework infrastructure', category: 'FEATURES' as const },
+      { text: 'introduce new dashboard module analytics panel metrics', category: 'FEATURES' as const },
+      { text: 'add support for multiple language localization translation i18n', category: 'FEATURES' as const },
+
+      // === BUG_FIXES ===
+      { text: 'fix null pointer exception error inside parser', category: 'BUG_FIXES' as const },
+      { text: 'resolve memory leak bug crash on exit runtime', category: 'BUG_FIXES' as const },
+      { text: 'hotfix handling invalid token auth block connection', category: 'BUG_FIXES' as const },
+      { text: 'fix type error inside esbuild configuration config compiler', category: 'BUG_FIXES' as const },
+      { text: 'resolve infinite loop condition during bytecode execution', category: 'BUG_FIXES' as const },
+      { text: 'fix race condition inside multi threading worker logic', category: 'BUG_FIXES' as const },
+      { text: 'patch security vulnerability inside dependency library parser', category: 'BUG_FIXES' as const },
+      { text: 'fix broken UI rendering layout on mobile view android', category: 'BUG_FIXES' as const },
+
+      // === MAINTENANCE ===
+      { text: 'bump version dependencies update action configuration', category: 'MAINTENANCE' as const },
+      { text: 'clean up console log format code styling lint format prettier', category: 'MAINTENANCE' as const },
+      { text: 'refactor routing logic architecture clean code structural change', category: 'MAINTENANCE' as const },
+      { text: 'update readme documentation docs installation guide tutorial', category: 'MAINTENANCE' as const },
+      { text: 'optimize build process compile times minification bundler scripts', category: 'MAINTENANCE' as const },
+      { text: 'compiling source code optimize assembly generator tools production', category: 'MAINTENANCE' as const },
+      { text: 'improve performance bench metrics profiling benchmark execution', category: 'MAINTENANCE' as const },
+      { text: 'ignore old backup temporary artifacts inside gitignore template', category: 'MAINTENANCE' as const }
     ];
 
     const classifier = new CommitClassifier();
     
-    classifier.train(trainingData, 300);
+    // Kita naikkan epoch-nya ke 500 biar dia bisa mengunyah data baru ini dengan matang
+    classifier.train(trainingData, 500);
 
     console.log('=== 2.6. CLASSIFYING COMMITS VIA NN ===');
     
@@ -205,6 +211,7 @@ async function run() {
 
     const changelogContent = `## Changelog for ${nextVersion}\n\n${properChangelogBody}`;
     fs.writeFileSync('current_changelog.md', changelogContent, 'utf8');
+
   } catch (error: any) {
     core.setFailed(`Otak Bot Error: ${error.message}`);
   }
