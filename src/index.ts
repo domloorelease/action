@@ -12,14 +12,7 @@ import * as core from '@actions/core';
 import * as github from '@actions/github';
 import { execSync } from 'child_process';
 import * as fs from 'fs';
-
-function shellExec(command: string): string {
-  try {
-    return execSync(command, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] }).trim();
-  } catch {
-    return '';
-  }
-}
+import { shellExec } from "./utils/shellExec.js";
 
 async function run() {
   try {
