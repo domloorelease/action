@@ -252,28 +252,40 @@ export class CommitClassifier {
       MAINTENANCE: [],
     };
 
-    // Array penampung untuk menyimpan vektor commit yang sudah lolos seleksi unik
-    const processedVectors: number[][] = [];
+    // 1. Amankan Vocabulary Lokal khusus untuk Dedup agar semua kata unik di commit terpetakan
+    const localVocabSet = new Set<string>();
+    commits.forEach((commit) => {
+      this.tokenize(commit).forEach((word) => localVocabSet.add(word));
+    });
+    const localVocabulary = Array.from(localVocabSet);
 
-    // Batas toleransi kemiripan matematika (0.85 = 85% kemiripan susunan kata)
+    // Helper inline untuk mengubah teks ke vektor berdasarkan localVocabulary
+    const textToLocalVector = (text: string): number[] => {
+      const vector = new Array(localVocabulary.length).fill(0);
+      this.tokenize(text).forEach((word) => {
+        const idx = localVocabulary.indexOf(word);
+        if (idx !== -1) vector[idx] += 1;
+      });
+      return vector;
+    };
+
+    const processedVectors: number[][] = [];
     const similarityThreshold = 0.85;
 
     commits.forEach((commit) => {
-      // 1. Ubah teks commit berjalan menjadi representasi vektor numerik
-      const currentVector = this.textToVector(commit);
+      // 2. Gunakan vektor lokal yang presisi menangkap kata baru
+      const currentVector = textToLocalVector(commit);
 
-      // Cek apakah vektor saat ini memiliki kemiripan tinggi dengan vektor yang sudah diproses
       let isDuplicateByAI = false;
       for (const existingVector of processedVectors) {
         const similarity = this.calculateCosineSimilarity(currentVector, existingVector);
         
         if (similarity > similarityThreshold) {
           isDuplicateByAI = true;
-          break; // Ketemu kembaran secara kontekstual, stop pengecekan
+          break;
         }
       }
 
-      // 2. Jika AI mendeteksi ini adalah variasi kalimat baru, loloskan ke changelog
       if (!isDuplicateByAI) {
         processedVectors.push(currentVector);
         
@@ -289,5 +301,4 @@ export class CommitClassifier {
 
     return markdown;
   }
-
 }
