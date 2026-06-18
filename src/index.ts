@@ -27,7 +27,10 @@ async function run() {
     }
     console.log(`Latest tag found: ${latestTag}`);
 
-    const tagCommitSha = shellExec(`git rev-list -n 1 "${latestTag}"`);
+    let tagCommitSha = '';
+    if (latestTag !== 'v0.1.0-proto.0') {
+      tagCommitSha = shellExec(`git rev-list -n 1 "${latestTag}"`).trim();
+    }
     console.log(`Commit SHA for that tag: ${tagCommitSha}`);
 
     console.log('=== 2. FETCHING COMMITS FOR CURRENT RELEASE ===');
