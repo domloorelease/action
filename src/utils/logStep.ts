@@ -9,24 +9,24 @@
  */
 
 const colors = {
-  INFO: "\x1b[36m",
-  SUCCESS: "\x1b[32m",
-  WARN: "\x1b[33m",
-  ERROR: "\x1b[31m",
-  GRAY: "\x1b[90m",
-  BOLD: "\x1b[1m",
-  RESET: "\x1b[0m",
+  INFO: '\x1b[36m',
+  SUCCESS: '\x1b[32m',
+  WARN: '\x1b[33m',
+  ERROR: '\x1b[31m',
+  GRAY: '\x1b[90m',
+  BOLD: '\x1b[1m',
+  RESET: '\x1b[0m',
 };
 
 export function logStart(boxWidth: number = 50) {
-  console.log(`\n${colors.GRAY}${"═".repeat(boxWidth)}${colors.RESET}`);
+  console.log(`\n${colors.GRAY}${'═'.repeat(boxWidth)}${colors.RESET}`);
 }
 
 export function logLine(
   msg: string,
-  type: "INFO" | "SUCCESS" | "ERROR" | "WARN" = "INFO",
+  type: 'INFO' | 'SUCCESS' | 'ERROR' | 'WARN' = 'INFO',
 ) {
-  const timestamp = new Date().toTimeString().split(" ")[0];
+  const timestamp = new Date().toTimeString().split(' ')[0];
   const badge = `${colors[type]}[${type}]${colors.RESET}`;
 
   console.log(
@@ -35,5 +35,5 @@ export function logLine(
 }
 
 export function logEnd(boxWidth: number = 50) {
-  console.log(`${colors.GRAY}${"─".repeat(boxWidth)}${colors.RESET}\n`);
+  console.log(`${colors.GRAY}${'─'.repeat(boxWidth)}${colors.RESET}\n`);
 }

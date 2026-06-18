@@ -8,15 +8,15 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  */
 
-import { execSync } from "child_process";
+import { execSync } from 'child_process';
 
 export function shellExec(command: string): string {
   try {
     return execSync(command, {
-      encoding: "utf8",
-      stdio: ["pipe", "pipe", "ignore"],
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'ignore'],
     }).trim();
   } catch {
-    return "";
+    return '';
   }
 }
