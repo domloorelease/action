@@ -30,3 +30,4 @@ export function shellExec(command: string): string {
     throw new Error(`Execution failed for: ${command}`);
   }
 }
+ 
