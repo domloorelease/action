@@ -9,7 +9,7 @@
  */
 
 import * as fs from 'fs';
-
+ 
 export const CATEGORIES = ['FEATURES', 'BUG_FIXES', 'MAINTENANCE'] as const;
 type Category = (typeof CATEGORIES)[number];
 
