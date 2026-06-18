@@ -21,15 +21,26 @@ async function run() {
     const commentFound = process.env.COMMENT_FOUND || '';
 
     console.log('=== 1. SEARCHING LATEST TAG & ANCHOR COMMIT ===');
-    let latestTag = shellExec('git describe --tags --abbrev=0');
-    if (!latestTag) {
+    let latestTag = '';
+    
+    try {
+      // Kita coba ambil tag terakhir
+      latestTag = shellExec('git describe --tags --abbrev=0');
+    } catch {
+      // Kalau gagal (karena gak ada tag sama sekali di repo), kita pake fallback aman ini
+      console.log('ℹ️ No tags found in repository history. Using initial fallback tag.');
       latestTag = 'v0.1.0-proto.0';
     }
     console.log(`Latest tag found: ${latestTag}`);
 
+    // Pastikan pencarian commit SHA juga aman dari crash kalau tag-nya pake fallback
     let tagCommitSha = '';
     if (latestTag !== 'v0.1.0-proto.0') {
-      tagCommitSha = shellExec(`git rev-list -n 1 "${latestTag}"`).trim();
+      try {
+        tagCommitSha = shellExec(`git rev-list -n 1 "${latestTag}"`);
+      } catch {
+        tagCommitSha = '';
+      }
     }
     console.log(`Commit SHA for that tag: ${tagCommitSha}`);
 
